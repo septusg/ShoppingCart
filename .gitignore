@@ -1,0 +1,23 @@
+# ═════ 前端 ═════
+node_modules/
+dist/
+.env
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ═════ 後端 ═════
+bin/
+obj/
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+appsettings.Development.json
+*.db
+
+# ═════ 忽略 ═════
+.DS_Store
+Thumbs.db
