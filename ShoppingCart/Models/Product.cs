@@ -28,5 +28,8 @@ namespace ShoppingCart.Models
         // 商品類別（電子產品、衣物、食品等）
         [StringLength(50)] // 類別名稱最大長度 50 字元
         public string Category { get; set; }
+
+        // 圖片 URL
+        public string ImageUrl { get; set; } 
     }
 }

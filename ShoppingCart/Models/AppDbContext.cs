@@ -10,7 +10,10 @@ namespace ShoppingCart.Models
         {
         }
 
-        // 對應到 Product 資料表
+        // 對應到資料表
         public DbSet<Product> Products { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
     }
 }
