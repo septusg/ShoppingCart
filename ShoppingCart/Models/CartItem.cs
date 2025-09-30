@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+
 namespace ShoppingCart.Models
 {
     public class CartItem
@@ -10,6 +11,7 @@ namespace ShoppingCart.Models
 
         [ForeignKey("Cart")]
         public int CartId { get; set; }
+
         public Cart Cart { get; set; }
 
         [ForeignKey("Product")]
