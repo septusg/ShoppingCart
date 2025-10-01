@@ -6,7 +6,7 @@ const loading = ref(false)
 const error = ref(null)
 const products = ref([])
 
-// 測試用的 userId（之後從登入拿）
+// 測試用
 const userId = 1
 
 async function fetchProducts() {
@@ -24,23 +24,15 @@ async function fetchProducts() {
 
 
 
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import { useCartStore } from '../stores/cart'
+const cartStore = useCartStore()
 
 async function addToCart(product) {
   try {
-    // 呼叫後端並拿到回傳的 cartDto（updatedCart）
-    const res = await api.post(`/Cart/${userId}`, { productId: product.id, quantity: 1 })
-
-    // res.data 就是後端回傳的 CartDto
-    const updatedCart = res.data
+    const updatedCart = await cartStore.addToCart(userId, product.id, 1)
     console.log('加入購物車後端回傳 cart:', updatedCart)
-
     alert(`已加入購物車：${product.name}（數量已更新為 ${updatedCart.items.find(i => i.productId === product.id)?.quantity ?? '?' }）`)
-
-    // 寫這行會自動跳轉到購物車頁面
-    // router.push({ name: 'Cart' })
-
+    // 若要自動導頁，可用 router.push({ name: 'Cart' })
   } catch (err) {
     console.error('addToCart error', err)
     const status = err?.response?.status
@@ -49,6 +41,35 @@ async function addToCart(product) {
     alert(`加入購物車失敗（HTTP ${status}）：${message}`)
   }
 }
+
+
+
+
+// import { useRouter } from 'vue-router'
+// const router = useRouter()
+
+// async function addToCart(product) {
+//   try {
+//     // 呼叫後端並拿到回傳的 cartDto（updatedCart）
+//     const res = await api.post(`/Cart/${userId}`, { productId: product.id, quantity: 1 })
+
+//     // res.data 就是後端回傳的 CartDto
+//     const updatedCart = res.data
+//     console.log('加入購物車後端回傳 cart:', updatedCart)
+
+//     alert(`已加入購物車：${product.name}（數量已更新為 ${updatedCart.items.find(i => i.productId === product.id)?.quantity ?? '?' }）`)
+
+//     // 寫這行會自動跳轉到購物車頁面
+//     // router.push({ name: 'Cart' })
+
+//   } catch (err) {
+//     console.error('addToCart error', err)
+//     const status = err?.response?.status
+//     const data = err?.response?.data
+//     const message = data?.message || JSON.stringify(data) || err.message
+//     alert(`加入購物車失敗（HTTP ${status}）：${message}`)
+//   }
+// }
 
 
 

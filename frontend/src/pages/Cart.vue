@@ -1,55 +1,52 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import api from '../services/api'
+import { computed, onMounted } from 'vue'
+import { useCartStore } from '../stores/cart'
 
-const loading = ref(false)
-const error = ref(null)
-const cart = ref(null)
-
-// 測試用 userId
+// 測試用
 const userId = 1
 
-async function fetchCart() {
-  loading.value = true
-  error.value = null
-  try {
-    const res = await api.get(`/Cart/${userId}`)
-    cart.value = res.data
-  } catch (err) {
-    // 若後端回傳 404（沒有購物車），設定空購物車物件
-    if (err?.response?.status === 404) {
-      cart.value = { id: null, userId, items: [] }
-    } else {
-      error.value = err?.response?.data || err.message || 'Unknown error'
-    }
-  } finally {
-    loading.value = false
-  }
-}
+const cartStore = useCartStore()
 
+// 頁面載入時從 store 讀取 cart（store 會處理 404）
+onMounted(() => {
+  if (!cartStore.cart) {
+    cartStore.fetchCart(userId)
+  }
+})
+
+const cart = computed(() => cartStore.cart)
+const loading = computed(() => cartStore.loading)
+const error = computed(() => cartStore.error)
+
+// 更新數量（呼叫 store）
 async function updateQuantity(item, newQty) {
   if (newQty < 1) return
   try {
-    await api.put(`/Cart/${userId}/${item.id}`, newQty)
-    item.quantity = newQty
+    await cartStore.updateItem(userId, item.id, newQty)
+    // store 會在成功後更新本地 cart，所以畫面會自動反映
   } catch (err) {
-    alert('更新數量失敗：' + (err?.message || ''))
+    console.error('updateQuantity error', err)
+    alert('更新數量失敗：' + (err?.response?.data?.message || err?.message || ''))
   }
 }
 
+// 移除項目（呼叫 store）
 async function removeItem(item) {
   if (!confirm('確定要移除嗎？')) return
   try {
-    await api.delete(`/Cart/${userId}/${item.id}`)
-    // 本地移除
-    cart.value.items = cart.value.items.filter(i => i.id !== item.id)
+    await cartStore.removeItem(userId, item.id)
+    // store 已移除本地 item
   } catch (err) {
-    alert('刪除失敗：' + (err?.message || ''))
+    console.error('removeItem error', err)
+    alert('移除失敗：' + (err?.response?.data?.message || err?.message || ''))
   }
 }
 
-onMounted(() => {
-  fetchCart()
+// 計算總計（保護性存取）
+const total = computed(() => {
+  const c = cart.value
+  if (!c || !c.items) return 0
+  return c.items.reduce((s, i) => s + ((i.product?.price || 0) * (i.quantity || 0)), 0)
 })
 </script>
 
@@ -59,15 +56,16 @@ onMounted(() => {
 
     <div v-if="loading">載入中…</div>
     <div v-else-if="error" style="color:crimson">{{ error }}</div>
+
     <div v-else>
       <div v-if="!cart || cart.items.length === 0">購物車空空如也</div>
 
       <div v-else>
         <div v-for="item in cart.items" :key="item.id" class="cart-item">
           <div class="left">
-            <div class="title">{{ item.product.name }}</div>
-            <div class="desc">{{ item.product.description }}</div>
-            <div>單價：NT$ {{ item.product.price }}</div>
+            <div class="title">{{ item.product?.name }}</div>
+            <div class="desc">{{ item.product?.description }}</div>
+            <div>單價：NT$ {{ item.product?.price }}</div>
           </div>
           <div class="right">
             <div>
@@ -84,7 +82,7 @@ onMounted(() => {
 
         <div class="summary">
           <strong>總計：</strong>
-          NT$ {{ cart.items.reduce((s,i) => s + i.product.price * i.quantity, 0) }}
+          NT$ {{ total }}
         </div>
       </div>
     </div>
