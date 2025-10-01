@@ -37,7 +37,8 @@ const isLogged = computed(() => !!auth.user)
         <router-link to="/cart">購物車 ({{ count }})</router-link>
         |
         <span v-if="!isLogged">
-          <router-link to="/login">登入</router-link>
+          <router-link to="/login">登入</router-link> |
+          <router-link to="/register">註冊</router-link>
         </span>
         <span v-else>
           你好！{{ auth.user.userName }}！ |
