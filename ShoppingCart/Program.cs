@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ShoppingCart.Models;
+using ShoppingCart.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -37,7 +38,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-// 讀取 Jwt 設定
+// 讀取 JWT 設定
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var jwtKey = jwtSection.GetValue<string>("Key");
 var jwtIssuer = jwtSection.GetValue<string>("Issuer");
@@ -72,6 +73,18 @@ var app = builder.Build();
 
 
 app.UseCors(MyAllowSpecificOrigins);
+
+
+
+// 自動套用 migration
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();   // 套用尚未套用的 migration
+    DbSeeder.Seed(db);       // 執行 Seed
+}
+
+
 
 
 // Configure the HTTP request pipeline.
