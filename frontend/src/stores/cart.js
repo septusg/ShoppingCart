@@ -1,7 +1,6 @@
-// src/stores/cart.js
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from '../services/api' // 你現有的 axios instance
+import api from '../services/api' // axios instance
 
 export const useCartStore = defineStore('cart', () => {
   const cart = ref(null) // cartDto or null

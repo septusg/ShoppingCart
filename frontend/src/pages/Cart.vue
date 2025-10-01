@@ -2,8 +2,9 @@
 import { computed, onMounted } from 'vue'
 import { useCartStore } from '../stores/cart'
 
-// 測試用
-const userId = 1
+import { useAuthStore } from '../stores/auth'
+const auth = useAuthStore()
+const userId = auth.user?.id || 1  // 若沒登入 fallback 或用匿名 cart 流程
 
 const cartStore = useCartStore()
 
