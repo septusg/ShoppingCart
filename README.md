@@ -11,7 +11,7 @@ For demonstration purposes only.
 ・後端：ASP.NET Core Web API（使用 DTO、JWT 驗證）  
 ・資料庫：MSSQL（EF Core Migrations）  
   
-
+  
 
 ## 主要功能  
 ・註冊 / 登入（JWT）  
@@ -20,6 +20,7 @@ For demonstration purposes only.
 ・後端使用 DTO 避免序列化循環／過度暴露資料  
 ・前端使用 Pinia 作為全域狀態（管理 cart / auth）  
 ・Swagger 提供 API 文件與測試介面  
+  
   
 
 ## 專案結構  
@@ -36,6 +37,7 @@ For demonstration purposes only.
     stores/  
     services/api.js  
   
+  
 
 ## 開發環境（本機）  
 ・.NET SDK｜8.0.414 (x64)  
@@ -43,10 +45,11 @@ For demonstration purposes only.
 ・npm｜11.6.1  
 ・MSSQL Server  
   
+・工具：VS2022、VS Code
+  
+  
 
 ## 預設 Demo 帳號  
-※ 資料庫初始化 (Seed)  
-專案啟動時會自動檢查資料庫，若資料庫或初始資料不存在，會自動建立  
   
 預設測試使用者  
 ・Email: abc@gmail.com  
@@ -54,6 +57,8 @@ For demonstration purposes only.
   
 預設商品  
 ・貓貓耳機  
+・狗狗滑鼠
+  
   
 
 ## 本機啟動（開發模式）  
@@ -73,7 +78,7 @@ For demonstration purposes only.
   }  
 }  
   
-※ 正式環境用環境變數或 secret store  
+※ 正式環境不放這  
   
 
 ### 資料庫遷移（Migrations）  
@@ -103,6 +108,7 @@ npm run dev
   
 前端開發伺服器通常為 http://localhost:5173/  
   
+  
 
 ## 常見問題與排除建議  
 ・EF 找不到 AddDbContext / 命名空間錯誤：  
@@ -124,6 +130,7 @@ npm run dev
   
 ・前端無法連到後端：  
 檢查 src/services/api.js 的 baseURL 是否指向正確後端 URL（包含 https 與 port）  
+  
   
 
 ## 快速測試（建議 Demo 流程）  
