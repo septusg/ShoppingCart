@@ -1,79 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 全域字型與一些 base style */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+/* 原先的系統字體改成 base 設定 */
+@layer base {
+  html, body {
+    @apply font-sans leading-relaxed bg-gray-50 text-gray-900;
+    min-height: 100vh;
+  }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card {
-  padding: 2em;
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+  a {
+    @apply font-medium text-indigo-600;
   }
   a:hover {
-    color: #747bff;
+    @apply text-indigo-500;
   }
+
+  h1 {
+    @apply text-4xl leading-tight;
+  }
+
   button {
-    background-color: #f9f9f9;
+    @apply rounded-lg border border-transparent px-4 py-2 text-base font-medium bg-gray-900 text-white transition-colors;
+  }
+  button:hover {
+    @apply border-indigo-300;
+  }
+}
+
+/* 一些小的可重用 class */
+@layer components {
+  .card {
+    @apply bg-white shadow-sm rounded-lg p-6;
+  }
+
+  /* Toast 中央樣式 */
+  .toast-center {
+    @apply fixed inset-0 flex items-center justify-center z-50 pointer-events-none;
+  }
+  .toast-box {
+    @apply pointer-events-auto bg-green-500 text-white font-bold px-6 py-3 rounded-lg shadow-lg;
+  }
+}
+
+/* media query 處理 dark mode / light mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+  @layer base {
+    html, body {
+      @apply bg-gray-900 text-gray-100;
+    }
+    button {
+      @apply bg-gray-800 text-white;
+    }
+    .card {
+      @apply bg-slate-800;
+    }
   }
 }
