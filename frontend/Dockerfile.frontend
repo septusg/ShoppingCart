@@ -1,0 +1,21 @@
+# Build stage
+FROM node:24 AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+
+# 傳入 API URL
+ARG VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL}
+
+RUN npm run build
+
+# Runtime stage (nginx)
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+# 若想在 container 裡讓 nginx 聽 5173 要修改 nginx.conf，通常不需要
+CMD ["nginx", "-g", "daemon off;"]
