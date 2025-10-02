@@ -69,7 +69,7 @@ onMounted(() => {
               v-if="p.imageUrl"
               :src="p.imageUrl"
               :alt="p.name"
-              class="w-full h-36 object-cover rounded-md"
+              class="w-full h-full object-cover rounded-md"
             />
             <div v-else class="w-full h-36 bg-gray-100 dark:bg-slate-700 rounded-md flex items-center justify-center text-gray-400">
               無圖片

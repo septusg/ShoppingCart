@@ -4,6 +4,7 @@ using ShoppingCart.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.Logging;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -80,10 +81,17 @@ app.UseCors(MyAllowSpecificOrigins);
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();   // 套用尚未套用的 migration
-    DbSeeder.Seed(db);       // 執行 Seed
+    try
+    {
+        db.Database.Migrate();   // 套用 migration
+        DbSeeder.Seed(db);       // 執行 Seed
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"DB init error: {ex}");
+        throw;
+    }
 }
-
 
 
 
